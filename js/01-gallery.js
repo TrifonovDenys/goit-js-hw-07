@@ -14,14 +14,23 @@ const createGalleryTable = () => {
 galleryBox.insertAdjacentHTML("beforeend", createGalleryTable())
 
 galleryBox.addEventListener('click', galleryImgShow)
-  
-function galleryImgShow(event) {
 
+function galleryImgShow(event) {
   event.preventDefault()
-  // console.log(event.target.dataset.source);
-  // console.log(event.currentTarget);
-  const instance = basicLightbox.create(`<img src="${event.target.dataset.source}" >`)
-  if (event.target.dataset.source !== undefined) {
+
+  const instance = basicLightbox.create(`<img src="${event.target.dataset.source}" >`) 
+
+  if (event.target.dataset.source !== undefined) {   
     instance.show()
+
+    window.addEventListener('keydown', (event)=> {
+      if (event.code === 'Escape') {
+        
+        instance.close()
+        console.log(event);
+      }
+    })
+
   }
 }
+    
