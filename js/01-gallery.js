@@ -1,36 +1,44 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryBox = document.querySelector('.gallery')
+const galleryBox = document.querySelector('.gallery');
 
 const createGalleryTable = () => {
+  const galleryTable = galleryItems
+    .map(
+      ({ preview, original, description }) =>
+        `<li class="gallery__item"><a class="gallery__link" href="${original}"><img class="gallery__image" src='${preview}' data-source='${original}' alt='${description}'></a></li>`
+    )
+    .join('');
 
-  const galleryTable = galleryItems.map(({ preview, original, description }) =>
-    `<li class="gallery__item"><a class="gallery__link" href="${original}"><img class="gallery__image" src='${preview}' data-source='${original}' alt='${description}'></a></li>`).join('')
-  
-  return galleryTable
-} 
+  return galleryTable;
+};
 
-galleryBox.insertAdjacentHTML("beforeend", createGalleryTable())
+galleryBox.insertAdjacentHTML('beforeend', createGalleryTable());
 
-galleryBox.addEventListener('click', galleryImgShow)
+galleryBox.addEventListener('click', galleryImgShow);
 
 function galleryImgShow(event) {
-  event.preventDefault()
+  event.preventDefault();
 
-  const instance = basicLightbox.create(`<img src="${event.target.dataset.source}" >`) 
+  const instance = basicLightbox.create(
+    `<img src="${event.target.dataset.source}" >`,
+    {
+      onShow: instance => {
+        window.addEventListener('keydown', onEscButton);
+      },
+      onClose: instance => {
+        window.removeEventListener('keydown', onEscButton);
+      },
+    }
+  );
 
-  if (event.target.dataset.source !== undefined) {   
-    instance.show()
+  instance.show();
 
-    window.addEventListener('keydown', (event)=> {
-      if (event.code === 'Escape') {
-        
-        instance.close()
-        console.log(event);
-      }
-    })
-
+  function onEscButton(event) {
+    if (event.code === 'Escape') {
+      console.log(event);
+      instance.close();
+    }
   }
 }
-    
